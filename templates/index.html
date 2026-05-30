@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gender Predictor - Find Gender by Name</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔮 Gender Predictor AI</h1>
+            <p>Predict Gender by Name with 85-90% Accuracy</p>
+        </div>
+
+        <div class="main-content">
+            <form id="predictionForm">
+                <div class="input-group">
+                    <label>📝 Enter Name</label>
+                    <input type="text" id="name" name="name" required 
+                           placeholder="e.g., John, Mary, Priya, Raj" 
+                           autocomplete="off">
+                    <small>Enter any first name to predict gender</small>
+                </div>
+
+                <button type="submit" class="predict-btn">✨ Predict Gender ✨</button>
+            </form>
+
+            <div id="result" class="result" style="display: none;">
+                <div class="result-card">
+                    <h2>Prediction Result for <span id="displayName"></span></h2>
+                    <div id="genderDisplay" class="gender-display"></div>
+                    
+                    <div class="confidence-section">
+                        <p>Confidence Score</p>
+                        <div class="progress-bar-container">
+                            <div id="confidenceBar" class="confidence-bar"></div>
+                        </div>
+                        <p id="confidenceText" class="confidence-text"></p>
+                    </div>
+
+                    <div class="probability-section">
+                        <div class="prob-item">
+                            <span>👨 Male</span>
+                            <div class="prob-bar-bg">
+                                <div id="maleBar" class="male-prob-bar"></div>
+                            </div>
+                            <span id="maleProb">0%</span>
+                        </div>
+                        <div class="prob-item">
+                            <span>👩 Female</span>
+                            <div class="prob-bar-bg">
+                                <div id="femaleBar" class="female-prob-bar"></div>
+                            </div>
+                            <span id="femaleProb">0%</span>
+                        </div>
+                    </div>
+
+                    <div id="similarNames" class="similar-names">
+                        <p><strong>📖 Similar names:</strong> <span id="similarList"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>📊 How It Works</h3>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number">85-90%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">Random Forest</div>
+                        <div class="stat-label">Algorithm</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">10+ Features</div>
+                        <div class="stat-label">Name Analysis</div>
+                    </div>
+                </div>
+                
+                <div class="example-names">
+                    <h4>🎯 Try these examples:</h4>
+                    <div class="example-buttons">
+                        <button onclick="setExample('John')">John</button>
+                        <button onclick="setExample('Mary')">Mary</button>
+                        <button onclick="setExample('Michael')">Michael</button>
+                        <button onclick="setExample('Jennifer')">Jennifer</button>
+                        <button onclick="setExample('Raj')">Raj</button>
+                        <button onclick="setExample('Priya')">Priya</button>
+                        <button onclick="setExample('Aarav')">Aarav</button>
+                        <button onclick="setExample('Ananya')">Ananya</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setExample(name) {
+            document.getElementById('name').value = name;
+            document.getElementById('predictionForm').dispatchEvent(new Event('submit'));
+        }
+
+        document.getElementById('predictionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const resultDiv = document.getElementById('result');
+            const name = formData.get('name');
+            
+            if (!name.trim()) {
+                alert('Please enter a name');
+                return;
+            }
+            
+            // Show loading state
+            resultDiv.style.display = 'block';
+            document.getElementById('displayName').textContent = name;
+            document.getElementById('genderDisplay').innerHTML = '<div class="loading">🤔 Analyzing name...</div>';
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    alert(data.error);
+                    resultDiv.style.display = 'none';
+                    return;
+                }
+                
+                // Update display name
+                document.getElementById('displayName').textContent = data.name;
+                
+                // Update gender display
+                const genderDisplay = document.getElementById('genderDisplay');
+                const isMale = data.gender === 'Male';
+                genderDisplay.innerHTML = `
+                    <div class="gender-icon ${isMale ? 'male-icon' : 'female-icon'}">
+                        ${isMale ? '👨' : '👩'}
+                    </div>
+                    <div class="gender-text ${isMale ? 'male-text' : 'female-text'}">
+                        ${data.gender}
+                    </div>
+                `;
+                
+                // Update confidence
+                const confidence = data.confidence;
+                document.getElementById('confidenceBar').style.width = confidence + '%';
+                document.getElementById('confidenceText').innerHTML = `${confidence}% Confidence`;
+                
+                // Change confidence bar color based on confidence level
+                const confidenceBar = document.getElementById('confidenceBar');
+                if (confidence >= 80) {
+                    confidenceBar.style.backgroundColor = '#4caf50';
+                } else if (confidence >= 60) {
+                    confidenceBar.style.backgroundColor = '#ff9800';
+                } else {
+                    confidenceBar.style.backgroundColor = '#f44336';
+                }
+                
+                // Update probability bars
+                document.getElementById('maleBar').style.width = data.male_probability + '%';
+                document.getElementById('femaleBar').style.width = data.female_probability + '%';
+                document.getElementById('maleProb').innerHTML = data.male_probability + '%';
+                document.getElementById('femaleProb').innerHTML = data.female_probability + '%';
+                
+                // Update similar names
+                if (data.similar_names) {
+                    document.getElementById('similarList').innerHTML = data.similar_names.join(', ');
+                }
+                
+                // Add animation
+                genderDisplay.classList.add('fade-in');
+                setTimeout(() => {
+                    genderDisplay.classList.remove('fade-in');
+                }, 500);
+                
+                // Smooth scroll to result
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                alert('Error: ' + error.message);
+                resultDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
