@@ -182,18 +182,10 @@ Performance may vary depending on dataset size and image quality.
 
 ## 📸 Screenshots
 
-### Training Process
-
-Add your screenshot inside the screenshots folder and update the image name.
-
-```markdown
-![Training](screenshots/training.png)
-```
-
 ### Prediction Result
 
 ```markdown
-![Prediction](screenshots/result.png)
+![Prediction](screenshots7/result.png)
 ```
 
 Example:
