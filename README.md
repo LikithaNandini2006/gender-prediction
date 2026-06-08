@@ -95,8 +95,7 @@ Actual results may vary depending on dataset quality and size.
 
 ### Prediction Result
 
-![Prediction](<img width="1366" height="768" alt="Screenshot (7)" src="https://github.com/user-attachments/assets/934d0a47-703e-45d3-8d54-d54c5b552a65" />
-)
+![Prediction](<img width="1366" height="768" alt="Screenshot (7)" src="https://github.com/user-attachments/assets/934d0a47-703e-45d3-8d54-d54c5b552a65" />)
 
 🤝 Contributing
 
