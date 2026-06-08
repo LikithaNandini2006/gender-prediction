@@ -185,7 +185,8 @@ Performance may vary depending on dataset size and image quality.
 ### Prediction Result
 
 ```markdown
-![Prediction](screenshots7/result.png)
+![Prediction](<img width="1366" height="768" alt="Screenshot (7)" src="https://github.com/user-attachments/assets/33a5c0aa-b593-43a8-ae3d-f8ca18a5e2c6" />
+)
 ```
 
 Example:
