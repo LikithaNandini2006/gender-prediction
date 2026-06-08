@@ -184,10 +184,7 @@ Performance may vary depending on dataset size and image quality.
 
 ### Prediction Result
 
-```markdown
-![Prediction](screenshots/<img width="1366" height="768" alt="Screenshot (7)" src="https://github.com/user-attachments/assets/babe7569-3073-4065-a892-c114eefc11b8" />
-
-)
+![Gender Predictor AI prediction result](static/screenshots/gender-predictor-result.png)
 
 ## 💡 Applications
 
