@@ -185,7 +185,8 @@ Performance may vary depending on dataset size and image quality.
 ### Prediction Result
 
 ```markdown
-![Prediction](<img width="1366" height="768" alt="Screenshot (7)" src="https://github.com/user-attachments/assets/72d768d9-d940-468d-9d3f-a6c1942e6127" />
+![Prediction](screenshots/<img width="1366" height="768" alt="Screenshot (7)" src="https://github.com/user-attachments/assets/babe7569-3073-4065-a892-c114eefc11b8" />
+
 )
 
 ## 💡 Applications
